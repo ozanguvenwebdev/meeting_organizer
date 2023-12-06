@@ -1,5 +1,10 @@
 # meeting_organizer
 
+!!! algorithm_tasks folder includes external py tasks<br>
+!!! that folder is unrelated to the meeting_organizer project<br>
+<br>
+<br>
+
 ## set up
 clone the repository <br>
 git clone https://github.com/ozanguvenwebdev/meeting_organizer<br>
