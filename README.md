@@ -1,8 +1,8 @@
 # meeting_organizer
 
 myproject folder is the API itself. I used Django REST Framework to create it.<br> it should be run at localhost (which I explained in the following paragraphs)<br>
-one-page application is the 'client.html' file. I used 'fetch' in JS to show clearly which methods I used to GET, POST, PUT and DELETE data, although I do not generally use JS for requests and responses.<br>
-I also used bootstrap modals to design it as much as I could in a limited time.
+one-page application is the 'client.html' file. I used 'fetch' in JS to show clearly which methods I used to GET, POST, PUT and DELETE data.<br>
+I also used bootstrap modals to design it as much as I could in a limited time.<br>
 
 !!! <b>algorithm_tasks</b> folder includes external py tasks<br>
 !!! that folder is unrelated to the meeting_organizer project<br>
