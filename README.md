@@ -15,7 +15,8 @@ git clone https://github.com/ozanguvenwebdev/meeting_organizer<br>
 python version is 'Python 3.12.0'<br>
 <br>
 create a virtual environnment to run the API;<br>
-virtualenv env
+'virtualenv env' for Windows<br>
+'python -m venv env' for linux and mac<br>
 activate the environment with '. env/Scripts/activate' in linux, 'env\Scripts\activate' in windows (in the directory which includes env folder)<br>
 after creating and activating env, run 'pip install -r requirements.txt'<br>
 change directory to the folder which includes 'manage.py' (/meeting_organizer/myproject)<br>
