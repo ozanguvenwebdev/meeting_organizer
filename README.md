@@ -14,14 +14,13 @@ git clone https://github.com/ozanguvenwebdev/meeting_organizer<br>
 <br>
 python version is 'Python 3.12.0'<br>
 <br>
-virtual environnment is ready. to run the API;<br>
+create a virtual environnment to run the API;<br>
+virtualenv env
 activate the environment with '. env/Scripts/activate' in linux, 'env\Scripts\activate' in windows (in the directory which includes env folder)<br>
+after creating and activating env, run 'pip install -r requirements.txt'<br>
 change directory to the folder which includes 'manage.py' (/meeting_organizer/myproject)<br>
 then run command 'python manage.py runserver'<br>
-***OPTIONAL<br>
-if you would like to use another environment, requirements are included as txt.<br>
-after creating and activating env, run 'pip install -r requirements.txt'<br>
-***OPTIONAL<br>
+
 <br>
 API should run at localhost (http://127.0.0.1:8000/)<br>
 it is important because I fetched the data from 'http://127.0.0.1:8000/'<br>
