@@ -11,10 +11,11 @@ I also used bootstrap modals to design it as much as I could in a limited time.
 ## set up
 clone the repository <br>
 git clone https://github.com/ozanguvenwebdev/meeting_organizer<br>
+change your directory into the folder ('/meeting_organizer')<br>
 <br>
 python version is 'Python 3.12.0'<br>
 <br>
-create a virtual environnment to run the API;<br>
+create a virtual environment to run the API;<br>
 'virtualenv env' for Windows<br>
 'python -m venv env' for linux and mac<br>
 activate the environment with '. env/Scripts/activate' in linux, 'env\Scripts\activate' in windows (in the directory which includes env folder)<br>
@@ -24,7 +25,8 @@ then run command 'python manage.py runserver'<br>
 
 <br>
 API should run at localhost (http://127.0.0.1:8000/)<br>
-it is important because I fetched the data from 'http://127.0.0.1:8000/'<br>
+you can see the fetched json data at 'http://127.0.0.1:8000/meetings/'
+it is important because I fetched the data from 'http://127.0.0.1:8000/meetings/'<br>
 <br>
 then, open client.html (/meeting_organizer)
 <br>
