@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Meeting Organizer</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  
+    <style>
+        .li-styling{display: flex;align-items: center;justify-content: space-between;}
+    </style>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid" style="justify-content:center;">
+          <a class="navbar-brand" href="#">Meeting Organizer</a>
+        </div>
+    </nav>
+
+    <div class="container" style="margin-top: 5%;">
+        <div class="row">
+            <div style="display: flex;justify-content: space-between;margin: 1% 0;padding-left:0;">
+                <h2>Meetings</h2>
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#modalAdd">Add</button>
+            </div>
+            <ul class="list-group" id="list-container">
+
+                
+            </ul>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="modalAdd">Add Meeting</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="topic" class="col-form-label">Topic:</label>
+                        <input type="text" class="form-control" id="topic" name="topic">
+                    </div>
+                    <div class="mb-3">
+                        <label for="date" class="col-form-label">Date:</label>
+                        <input type="datetime-local" class="form-control" id="date" name="date">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button onclick="createMeeting()" class="btn btn-primary">Add</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="updateModal" tabindex="-1" aria-labelledby="updateModal" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="updateModalHeader"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="topic" class="col-form-label">Topic:</label>
+                            <input type="text" class="form-control" name="topic" id="updateTopic" value="">
+                        </div>
+                        <div class="mb-3">
+                            <label for="date" class="col-form-label">Date:</label>
+                            <input type="datetime-local" class="form-control" name="date" id="updateDate" value="">
+                        </div>
+                        <input type="hidden" id="meetingId" name="meeting_id" value="updateModal" />
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button id="updateButton" class="btn btn-primary">Update</button>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+  
+
+
+
+    <script>
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== "") {
+            const cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + "=")) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+                }
+            }
+            }
+            return cookieValue;
+        }
+
+        window.onload = function() { logMeetings(); };
+
+        async function logMeetings() {
+            const response = await fetch("http://127.0.0.1:8000/meetings/");
+            const meetings = await response.json();
+            console.log(meetings);
+
+            var ul = document.getElementById('list-container');
+            for (var i = 0; i < meetings.length; ++i) {
+                var li=document.createElement('li');
+                li.classList.add("list-group-item");
+                li.classList.add("li-styling");
+                let meetingId = meetings[i].id.toString();
+                li.setAttribute("id",meetingId);
+                var date = meetings[i].date;
+                li.innerHTML = meetings[i].topic + '<input id="date' + meetingId + '" type="hidden" value="' + date + '"><div><button onclick="transferDataModal(' + meetings[i].id + ')" type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" id="' + meetings[i].id + '">Edit</button><button type="button" class="btn btn-danger" onclick="deleteMeeting(' + meetingId + ')">Delete</button></div>';
+                ul.appendChild(li);                                 
+            }
+        }
+
+ 
+        async function createMeeting() {
+            let topic = document.getElementById("topic").value
+            let date = document.getElementById("date").value
+            
+            let response = await fetch("http://127.0.0.1:8000/meetings/create/", {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie("csrftoken"),
+                },
+                body: JSON.stringify({topic: topic, date: date}),
+            })
+
+
+            location.reload();
+
+            // const new_meetings = await response.json();
+            // const new_meeting_id = new_meetings.id.toString()
+            // const new_meeting_topic = new_meetings.topic
+            // const new_meeting_date = new_meetings.date
+            
+            // var ul = document.getElementById('list-container');
+            // var li=document.createElement('li');
+            // li.classList.add("list-group-item");
+            // li.classList.add("li-styling");
+            // li.setAttribute("id",new_meeting_id)
+            // li.innerHTML = new_meeting_topic + '<input id="date' + new_meeting_id + '" type="hidden" value="' + new_meeting_date + '"><div><button type="button" onclick="transferDataModal(' + new_meeting_id + ')" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#updateModal" id="' + new_meeting_id + '">Edit</button><button type="button" class="btn btn-danger" onclick="deleteMeeting(' + new_meeting_id + ')">Delete</button></div>';
+            // ul.appendChild(li);
+
+        };
+
+        async function deleteMeeting(id) {
+            let meetingId = id.toString();
+            let response = await fetch("http://127.0.0.1:8000/meetings/" + meetingId +"/delete/", {
+                method: 'DELETE',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie("csrftoken"),
+                },
+                body: JSON.stringify({id: id}),
+            })
+
+            location.reload();
+
+            // const deleted_meeting = await response.json();
+            // const deleted_meeting_id = deleted_meeting.id
+            // var target_element = document.getElementById(deleted_meeting_id)
+            // target_element.remove()
+        };
+
+        async function updateMeeting(id) {
+            let meetingId = id.toString();
+            let updateTopic = document.getElementById("updateTopic").value
+            let updateDate = document.getElementById("updateDate").value
+            let response = await fetch("http://127.0.0.1:8000/meetings/" + meetingId + "/update/", {
+                method: 'PUT',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie("csrftoken"),
+                },
+                body: JSON.stringify({id: id,topic: updateTopic, date: updateDate,}),
+            })
+            location.reload();
+        };
+
+
+        function transferDataModal(li_id) {
+            var target_element = document.getElementById(li_id)
+            var meeting_topic = target_element.innerText.replace("EditDelete", "");
+            var topic_input = document.getElementById("updateTopic")
+            var date_input = document.getElementById("updateDate")
+            var popup_header = document.getElementById("updateModalHeader")
+            var update_button = document.getElementById("updateButton")
+
+            attribute_value = "updateMeeting(" + li_id + ")"
+            update_button.setAttribute("onclick", attribute_value)
+
+            var hidden_date_input_id = "date" + li_id.toString()
+            var hidden_date_input = document.getElementById(hidden_date_input_id)
+            var date_value = hidden_date_input.value
+            date_value = new Date(date_value);
+            date_value = date_value.toISOString().replace(":00.000Z","")
+
+            topic_input.value = meeting_topic
+            topic_input.innerHTML = meeting_topic
+            date_input.value = date_value
+            date_input.innerHTML = date_value
+            popup_header.innerHTML = "Edit Meeting: " + meeting_topic
+
+        }
+
+
+    </script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
